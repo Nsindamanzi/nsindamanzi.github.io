@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thamsanqa Ngwenya | Cybersecurity Professional</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --terminal-bg: #0a0e14;
+            --terminal-dark: #050709;
+            --terminal-lighter: #151a21;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-muted: #6e7681;
+            --green-primary: #00ff41;
+            --green-secondary: #00cc33;
+            --green-dark: #009929;
+            --green-glow: rgba(0, 255, 65, 0.3);
+            --border: #1f2937;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            background: var(--terminal-bg);
+            color: var(--text-primary);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Terminal scanline effect */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 255, 65, 0.03) 0px,
+                transparent 2px,
+                transparent 4px
+            );
+            pointer-events: none;
+            z-index: 9999;
+            animation: scanline 8s linear infinite;
+        }
+
+        @keyframes scanline {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(100px); }
+        }
+
+        /* Grid background */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 65, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 65, 0.02) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Header */
+        header {
+            padding: 3rem 0;
+            border-bottom: 2px solid var(--green-primary);
+            margin-bottom: 4rem;
+            box-shadow: 0 2px 20px var(--green-glow);
+            position: relative;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--green-secondary);
+            animation: lineGrow 2s ease-out forwards;
+        }
+
+        @keyframes lineGrow {
+            to { width: 100%; }
+        }
+
+        .name {
+            font-size: clamp(2.5rem, 7vw, 5rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.75rem;
+            color: var(--green-primary);
+            text-shadow: 0 0 20px var(--green-glow);
+            opacity: 0;
+            animation: glitchIn 1s ease-out forwards;
+            text-transform: uppercase;
+        }
+
+        @keyframes glitchIn {
+            0% {
+                opacity: 0;
+                transform: translateX(-30px);
+                text-shadow: 5px 0 var(--green-primary), -5px 0 var(--green-secondary);
+            }
+            20% {
+                transform: translateX(-10px) skew(-5deg);
+            }
+            40% {
+                transform: translateX(10px) skew(5deg);
+            }
+            60% {
+                transform: translateX(-5px);
+            }
+            80% {
+                transform: translateX(2px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+                text-shadow: 0 0 20px var(--green-glow);
+            }
+        }
+
+        .tagline {
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.3s forwards;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .location {
+            font-size: 1.05rem;
+            color: var(--green-primary);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.5s forwards;
+        }
+
+        .location::before {
+            content: '>';
+            color: var(--green-secondary);
+        }
+
+        .header-links {
+            margin-top: 1.5rem;
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.7s forwards;
+        }
+
+        .header-link {
+            display: inline-block;
+            padding: 0.75rem 1.75rem;
+            background: transparent;
+            border: 2px solid var(--green-primary);
+            text-decoration: none;
+            color: var(--green-primary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--green-primary);
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+
+        .header-link:hover::before {
+            left: 0;
+        }
+
+        .header-link:hover {
+            color: var(--terminal-bg);
+            box-shadow: 0 0 20px var(--green-glow);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Section */
+        section {
+            margin-bottom: 5rem;
+        }
+
+        .section-title {
+            font-size: clamp(2.2rem, 4vw, 3.5rem);
+            font-weight: 800;
+            margin-bottom: 2.5rem;
+            color: var(--green-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            position: relative;
+            display: inline-block;
+            text-shadow: 0 0 15px var(--green-glow);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 70%;
+            height: 3px;
+            background: var(--green-secondary);
+            box-shadow: 0 0 10px var(--green-glow);
+        }
+
+        .section-title::before {
+            content: '// ';
+            color: var(--green-secondary);
+            margin-right: 0.5rem;
+        }
+
+        /* About */
+        .about-content p {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            margin-bottom: 1.75rem;
+        }
+
+        .about-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        .highlight {
+            color: var(--green-primary);
+            font-weight: 700;
+            text-shadow: 0 0 10px var(--green-glow);
+        }
+
+        /* Stats Grid */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.8s forwards;
+        }
+
+        .stat-card {
+            background: var(--terminal-dark);
+            border: 2px solid var(--green-primary);
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px var(--green-glow);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 0;
+            background: linear-gradient(135deg, rgba(0, 255, 65, 0.1), rgba(0, 204, 51, 0.1));
+            transition: height 0.3s ease;
+            z-index: 0;
+        }
+
+        .stat-card:hover::before {
+            height: 100%;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 30px var(--green-glow);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--green-primary);
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 0 15px var(--green-glow);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-secondary);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 3rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--green-primary), var(--green-secondary));
+            box-shadow: 0 0 10px var(--green-glow);
+        }
+
+        .timeline-item {
+            margin-bottom: 3.5rem;
+            position: relative;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out forwards;
+            background: var(--terminal-lighter);
+            padding: 1.5rem;
+            border-left: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-item:hover {
+            border-left-color: var(--green-primary);
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+        }
+
+        .timeline-item:nth-child(1) { animation-delay: 0.2s; }
+        .timeline-item:nth-child(2) { animation-delay: 0.4s; }
+        .timeline-item:nth-child(3) { animation-delay: 0.6s; }
+        .timeline-item:nth-child(4) { animation-delay: 0.8s; }
+        .timeline-item:nth-child(5) { animation-delay: 1s; }
+        .timeline-item:nth-child(6) { animation-delay: 1.2s; }
+        .timeline-item:nth-child(7) { animation-delay: 1.4s; }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -3.6rem;
+            top: 2rem;
+            width: 14px;
+            height: 14px;
+            background: var(--green-primary);
+            border: 3px solid var(--terminal-bg);
+            border-radius: 50%;
+            box-shadow: 0 0 15px var(--green-glow);
+        }
+
+        .timeline-date {
+            font-size: 0.9rem;
+            color: var(--green-secondary);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .timeline-date::before {
+            content: '[ ';
+            color: var(--green-primary);
+        }
+
+        .timeline-date::after {
+            content: ' ]';
+            color: var(--green-primary);
+        }
+
+        .timeline-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--green-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+
+        .timeline-org {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .timeline-description {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+
+        .timeline-description ul {
+            margin-top: 1rem;
+            padding-left: 1.5rem;
+        }
+
+        .timeline-description li {
+            margin-bottom: 0.75rem;
+        }
+
+        .timeline-description li::marker {
+            color: var(--green-primary);
+        }
+
+        .timeline-description strong {
+            color: var(--green-primary);
+            font-weight: 700;
+        }
+
+        /* Skills */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .skill-category {
+            background: var(--terminal-dark);
+            border: 2px solid var(--green-primary);
+            padding: 2rem;
+            position: relative;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out forwards;
+            box-shadow: 0 0 10px var(--green-glow);
+            transition: all 0.3s ease;
+        }
+
+        .skill-category:hover {
+            box-shadow: 0 5px 30px var(--green-glow);
+            transform: translateY(-3px);
+        }
+
+        .skill-category:nth-child(1) { animation-delay: 0.2s; }
+        .skill-category:nth-child(2) { animation-delay: 0.4s; }
+        .skill-category:nth-child(3) { animation-delay: 0.6s; }
+
+        .skill-category h3 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            color: var(--green-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 2px solid var(--green-primary);
+            padding-bottom: 0.75rem;
+            text-shadow: 0 0 10px var(--green-glow);
+        }
+
+        .skill-category h3::before {
+            content: '$ ';
+            color: var(--green-secondary);
+        }
+
+        .skill-list {
+            list-style: none;
+        }
+
+        .skill-list li {
+            padding: 0.6rem 0;
+            position: relative;
+            padding-left: 1.5rem;
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .skill-list li::before {
+            content: '>';
+            position: absolute;
+            left: 0;
+            color: var(--green-primary);
+            font-weight: bold;
+        }
+
+        /* Footer */
+        footer {
+            padding: 2.5rem 0;
+            text-align: center;
+            border-top: 2px solid var(--green-primary);
+            margin-top: 4rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            box-shadow: 0 -2px 20px var(--green-glow);
+        }
+
+        .terminal-prompt {
+            color: var(--green-primary);
+            display: inline-block;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 18px;
+            background: var(--green-primary);
+            margin-left: 5px;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+
+        /* Dynamic particle background */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--green-primary);
+            opacity: 0.3;
+            animation: float linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.3;
+            }
+            90% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-100px) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        /* Glowing text on hover */
+        .timeline-title:hover,
+        .skill-category h3:hover {
+            text-shadow: 0 0 20px var(--green-glow), 0 0 30px var(--green-glow);
+            transform: translateX(5px);
+            transition: all 0.3s ease;
+        }
+
+        /* Interactive skill list items */
+        .skill-list li:hover {
+            color: var(--green-primary);
+            transform: translateX(10px);
+            transition: all 0.2s ease;
+        }
+
+        .skill-list li:hover::before {
+            content: '>>';
+            text-shadow: 0 0 10px var(--green-glow);
+        }
+
+        /* Pulsing stats on hover */
+        .stat-number:hover {
+            animation: pulse 0.5s ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); text-shadow: 0 0 30px var(--green-glow); }
+        }
+
+        /* Interactive header links with slide effect */
+        .header-link {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-link::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--green-primary);
+            color: var(--terminal-bg);
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .header-link:hover::after {
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline {
+                padding-left: 2rem;
+            }
+
+            .timeline-item::before {
+                left: -2.6rem;
+            }
+
+            .header-links {
+                flex-direction: column;
+            }
+
+            .header-link {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Dynamic particle background -->
+    <div class="particles" id="particles"></div>
+
+    <div class="container">
+        <header>
+            <h1 class="name">Thamsanqa Ngwenya</h1>
+            <p class="tagline">Cybersecurity Professional | PenTest | SecOps</p>
+            <p class="location">Bulawayo, Zimbabwe</p>
+            <div class="header-links">
+                <a href="https://app.hackthebox.com/profile/Nsindamanzi" class="header-link" target="_blank" rel="noopener noreferrer">HackTheBox</a>
+                <a href="https://github.com/Nsindamanzi/CryptaSphere-Labs" class="header-link" target="_blank" rel="noopener noreferrer">GitHub Labs</a>
+            </div>
+        </header>
+
+        <section class="about">
+            <h2 class="section-title">System_Info</h2>
+            <div class="about-content">
+                <p>Cybersecurity professional based in Bulawayo, Zimbabwe, specializing in penetration testing, security operations, and defensive security infrastructure. Currently pursuing <span class="highlight">CompTIA Security+</span> certification with hands-on experience deploying and managing enterprise security monitoring systems.</p>
+                <p>Strong technical foundation in Linux system administration, virtualization infrastructure, and security tooling. Passionate about building cybersecurity capability in the African market through knowledge sharing and practical security implementations.</p>
+                <p>Exploring the establishment of a cybersecurity consultancy to address the growing security needs of SMEs and enterprises across Zimbabwe and Southern Africa.</p>
+            </div>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <span class="stat-number">Sec+</span>
+                    <span class="stat-label">In Progress</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">20+</span>
+                    <span class="stat-label">Labs Completed</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">7+</span>
+                    <span class="stat-label">Years Active Study</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="experience">
+            <h2 class="section-title">Experience_Log</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">March 2026</div>
+                    <h3 class="timeline-title">Advanced Security Infrastructure Deployment</h3>
+                    <div class="timeline-org">Independent Research & Lab Development</div>
+                    <p class="timeline-description">
+                        Successfully deployed <strong>Wazuh SIEM</strong> across multi-platform environment (Ubuntu, Debian, Kali Linux, Windows 8, Windows 10) with active agents reporting to centralized management server. Resolved complex Elastic Stack configuration challenges including Fleet initialization and encrypted saved objects. Optimized Virtual Machine Manager (virt-manager/KVM) infrastructure for red team lab performance and resource efficiency.
+                    </p>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">2023 - Present</div>
+                    <h3 class="timeline-title">Independent Security Research & Training</h3>
+                    <div class="timeline-org">Self-Directed Study & Lab Practice</div>
+                    <p class="timeline-description">
+                        Deep immersion in offensive and defensive security through hands-on research and lab development. Built comprehensive virtual environments for penetration testing practice, vulnerability assessment, and security monitoring. Mastering exploitation techniques, privilege escalation, post-exploitation methods, and defensive security operations through platforms like <strong>HackTheBox</strong>, tackling real-world machine challenges, developing exploit chains, and sharpening penetration testing methodologies. Actively pursuing CompTIA Security+ certification to formalize foundational security knowledge. Developing expertise through continuous learning, CTF challenges, security lab documentation, and real-world infrastructure deployments. Building public portfolio on GitHub to contribute to the African cybersecurity community and demonstrate practical security implementation skills.
+                    </p>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">September 2021 - September 2022</div>
+                    <h3 class="timeline-title">Diploma in Professional Computing & Information Processing</h3>
+                    <div class="timeline-org">Institute of Commercial Management (ICM), England</div>
+                    <p class="timeline-description">
+                        Student No. 2299005 | Graduated with <strong>Distinctions</strong> in Applications, Number & Logic, and Systems Analysis. Earned <strong>Credit</strong> in Programming Project. Comprehensive advanced program covering professional computing principles, systems development, and applied information processing.
+                    </p>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">2020</div>
+                    <h3 class="timeline-title">IT Intern</h3>
+                    <div class="timeline-org">Datlabs Private Limited</div>
+                    <p class="timeline-description">
+                        One-year internship gaining hands-on experience with enterprise IT infrastructure and systems administration. Key contributions and achievements:
+                        <ul>
+                            <li><strong>Network Security Assessment:</strong> Conducted comprehensive network vulnerability scan using Nessus Essentials. Identified critical security vulnerabilities and misconfigurations across the company network infrastructure. Compiled detailed security report with risk assessments and remediation recommendations that led to an upgrade of the company's Sophos firewall.</li>
+                            <li>ERP reporting systems configuration and maintenance</li>
+                            <li>Active Directory administration and user management</li>
+                            <li>Network simulation and design using Cisco Packet Tracer</li>
+                            <li>IT infrastructure support and technical documentation</li>
+                        </ul>
+                    </p>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">July 2021</div>
+                    <h3 class="timeline-title">Certificate in Professional Computing & Information Processing</h3>
+                    <div class="timeline-org">Institute of Commercial Management (ICM), England</div>
+                    <p class="timeline-description">
+                        Foundation certificate program in professional computing and information processing principles.
+                    </p>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">2018 - 2019</div>
+                    <h3 class="timeline-title">C++ Programming & IT Lecturer Assistant</h3>
+                    <div class="timeline-org">Bulawayo Polytechnic College</div>
+                    <p class="timeline-description">
+                        Assisted with C++ programming instruction and Information Technology concepts lectures. Supported curriculum development, conducted practical lab sessions, and mentored students in programming fundamentals. Served as College Debate Secretary, fostering critical thinking and public speaking skills within the student community.
+                    </p>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">December 2019</div>
+                    <h3 class="timeline-title">National Certificate in Information Technology</h3>
+                    <div class="timeline-org">Bulawayo Polytechnic · Zimbabwe Ministry of Higher & Tertiary Education</div>
+                    <p class="timeline-description">
+                        Cert No. B 155797 | Foundation program covering information technology fundamentals, systems analysis, database management, networking principles, and practical computing skills.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="skills">
+            <h2 class="section-title">Tech_Stack</h2>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3>Offensive Security</h3>
+                    <ul class="skill-list">
+                        <li>Penetration Testing (Network & Web)</li>
+                        <li>Vulnerability Assessment & Exploitation</li>
+                        <li>Red Team Operations & Lab Development</li>
+                        <li>Nessus Essentials (Vulnerability Scanning)</li>
+                        <li>Security Research & Analysis</li>
+                        <li>HackTheBox Challenges</li>
+                    </ul>
+                </div>
+
+                <div class="skill-category">
+                    <h3>Security Operations</h3>
+                    <ul class="skill-list">
+                        <li>SIEM Deployment (Wazuh, Elastic Stack)</li>
+                        <li>Security Monitoring & Threat Detection</li>
+                        <li>Log Analysis & Correlation</li>
+                        <li>Incident Response Planning</li>
+                        <li>Firewall Configuration (Sophos)</li>
+                        <li>Threat Intelligence Integration</li>
+                    </ul>
+                </div>
+
+                <div class="skill-category">
+                    <h3>Infrastructure & Development</h3>
+                    <ul class="skill-list">
+                        <li>Linux Administration (Debian, Ubuntu, Kali)</li>
+                        <li>Virtualization (Virtual Machine Manager, KVM/QEMU)</li>
+                        <li>Network Security Architecture</li>
+                        <li>Python & Bash Scripting</li>
+                        <li>C++ Programming</li>
+                        <li>Active Directory Administration</li>
+                        <li>Cisco Packet Tracer (Network Simulation)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>&copy; 2026 Thamsanqa Ngwenya. All rights reserved.</p>
+            <p style="margin-top: 0.5rem;">Bulawayo, Zimbabwe | Africa/Harare (GMT+2)</p>
+            <p style="margin-top: 1rem;" class="terminal-prompt">root@cybersec:~$ <span class="cursor"></span></p>
+        </footer>
+    </div>
+
+    <script>
+        // Generate floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                // Random starting position
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                particle.style.animationDelay = Math.random() * 5 + 's';
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Add data-text attributes for header links hover effect
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            
+            const headerLinks = document.querySelectorAll('.header-link');
+            headerLinks.forEach(link => {
+                link.setAttribute('data-text', link.textContent);
+            });
+
+            // Add scroll reveal effect for timeline items
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all timeline items
+            document.querySelectorAll('.timeline-item').forEach(item => {
+                observer.observe(item);
+            });
+
+            // Observe skill categories
+            document.querySelectorAll('.skill-category').forEach(item => {
+                observer.observe(item);
+            });
+        });
+
+        // Add typing effect to terminal prompt (optional enhancement)
+        const terminalText = 'Connected. Security systems online.';
+        let charIndex = 0;
+
+        function typeTerminal() {
+            if (charIndex < terminalText.length) {
+                const prompt = document.querySelector('.terminal-prompt');
+                if (prompt && charIndex === 0) {
+                    const span = document.createElement('span');
+                    span.style.color = 'var(--text-muted)';
+                    span.style.marginLeft = '10px';
+                    span.id = 'typing-text';
+                    prompt.appendChild(span);
+                }
+                const typingSpan = document.getElementById('typing-text');
+                if (typingSpan) {
+                    typingSpan.textContent += terminalText.charAt(charIndex);
+                    charIndex++;
+                    setTimeout(typeTerminal, 50);
+                }
+            }
+        }
+
+        // Start typing effect after page load
+        window.addEventListener('load', () => {
+            setTimeout(typeTerminal, 2000);
+        });
+    </script>
+</body>
+</html>
